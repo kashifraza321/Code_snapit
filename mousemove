@@ -1,0 +1,41 @@
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import { ApiService } from '../core/services/api.service';
+declare var $: any;
+
+@Component({
+  selector: 'app-projets',
+  templateUrl: './projets.component.html',
+  styleUrls: ['./projets.component.scss']
+})
+export class ProjetsComponent implements OnInit {
+  posts: Object; 
+  globalListenFunc: Function;
+ 
+  
+  constructor(private apiService: ApiService, private renderer: Renderer2) {
+  }
+
+  ngOnInit(): void {
+    var body = document.body;
+    body.classList.remove("game");
+    body.classList.remove("home");
+    this.apiService.getAllPosts().subscribe(data => {
+      this.posts = data;
+     // console.log(data);
+      //this.GFG_Fun();
+    });
+    this.globalListenFunc = this.renderer.listen('document', 'mousemove', e => { 
+      var x = e.clientX+20; 
+      var y = e.clientY+20;   
+    $(".gdlr-core-blog-full-head-right a:hover img").css({"left": x, "top": y}); 
+    });
+     
+  }
+ 
+
+ ngOnDestroy() {
+  // remove listener
+  this.globalListenFunc();
+}
+
+}
